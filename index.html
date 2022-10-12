@@ -1,0 +1,58 @@
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+        <h1 id="title" class="title">Welcome to Yinzer!</h1>
+    <h2 id="subtitle" class="title"> The best place for Yinzers to say Tomlin should be fired, Devin bush is bad, and all around complaining about the steelers</h2>
+    
+    <!--<input id="newtitle" placeholder="Make your new title here">-->
+    
+    
+      <div class="d-flex justify-content-center mb-5 mt-5">
+        <button type="button" class="btn btn-primary" id="loginbutton"> Log into Yinzer! </button>
+      </div>
+    
+    
+    <!-- attemting to do tweeting stuff here-->
+
+    <div class="container mb-5">
+        <div class="row">
+          <div class="col-6">
+            <input type="text" class="form-control" id="message" placeholder="Put message here!">
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-warning" id="sendtweet">send tweet</button>
+          </div>
+        </div>
+      </div>
+    
+    
+    
+    
+    
+    <div class="container text-center">
+        <div class="row">
+          <div class="col">
+            First in DOM, ordered last
+          </div>
+          <div class="col-6">
+            <div id="alltweets" class="allthetweets"></div>
+          </div>
+          <div class="col">
+            Third in DOM, ordered first
+          </div>
+        </div>
+      </div>
+    </body>
+    
+    
+    <script src='https://www.gstatic.com/firebasejs/9.9.4/firebase-app-compat.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.1/js/bootstrap.min.js'></script>
+    <script src='https://www.gstatic.com/firebasejs/9.9.4/firebase-auth-compat.js'></script>
+    <script src='https://www.gstatic.com/firebasejs/9.9.4/firebase-database-compat.js'></script> 
+    <script src='script.js'></script>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"/>
+    
+</html>
