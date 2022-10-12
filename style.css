@@ -11,8 +11,8 @@
   text-align: center;
 }
 
-html, body{
-  background: darkblue;
+body{
+  background: #dfcfbe;  
 }
 
 .card-img-top {
