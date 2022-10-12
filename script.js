@@ -113,7 +113,8 @@ $("#sendtweet").on("click", ()=>{
       }
      
       let newtweetref =  tweetref.push();
-      newtweetref.set( tweetmessage);
+      newtweetref.set( tweetinfo);
+      
       //what should I do with tweetinfo?
       })
 
@@ -123,6 +124,8 @@ $("#loginbutton").on("click", ()=>{
 var provider = new firebase.auth.GoogleAuthProvider();
 firebase.auth().signInWithPopup(provider);
 });
+
+//logout logic goes here
 
 //THE KEY AUTH LISTENING FUNCTION IS THIS ONE:
 /*
