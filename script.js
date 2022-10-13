@@ -47,6 +47,23 @@ $("#nukes").on('click', ()=>{
   rosterRef.remove();
 })
 
+//if signed in logic goes here
+firebase.auth().onAuthStateChanged((user) => {
+  //alert("Does this fire even at page load?")
+  if (user) {
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/firebase.User
+    
+    console.log(user.displayname);
+    var uid = user.uid;
+    // ...
+  } else {
+    // User is signed out
+    // ...
+  }
+});
+
+
 /*let tweetJSON = {
   "content": "Let Kenny play!!!!",
   "likes": -1,
@@ -100,11 +117,12 @@ tweetref.on("child_added", (ss)=>{
 
 //tweet sending logic
 $("#sendtweet").on("click", ()=>{
+      var userinfo=firebase.auth().currentUser;
       var tweetmessage = $("#message").val();
       var tweetinfo = {
         author: {
-          handle: "TJWatt90",
-          pic: "https://www.nbcsports.com/sites/rsnunited/files/article/hero/web-220912-tj-watt-getty.jpg"
+          handle: userinfo.displayName,
+          pic: userinfo.photoURL
         },
         content: tweetmessage,
         likes: 0,
@@ -127,6 +145,11 @@ firebase.auth().signInWithPopup(provider);
 });
 
 //logout logic goes here
+$("#logoutbutton").on("click", ()=>{
+  firebase.auth().signOut();
+})
+
+
 
 //THE KEY AUTH LISTENING FUNCTION IS THIS ONE:
 /*
