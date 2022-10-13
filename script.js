@@ -72,6 +72,7 @@ let renderTweet = (tObj)=>{
         <p class="card-text"><small class="text-muted">Tweeted at ${new Date(tObj.timestamp).toLocaleString()}</small></p>
         <a href="#" class="btn btn-success">${tObj.likes} Likes</a>
         <a href="#" class="btn btn-danger">TEMP Dislikes</a>
+        <a href="#" class="btn btn-dark">Delete Tweet</a>
       </div>
     </div>
   </div>

@@ -15,10 +15,11 @@
 
 .title{
   text-align: center;
+  background-color: red;
 }
 
-body{
-  background: #dfcfbe;  
+.body{
+  background-color: #000000;  
 }
 
 .card-img-top {
