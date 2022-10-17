@@ -56,12 +56,152 @@ firebase.auth().onAuthStateChanged((user) => {
     
     console.log(user.displayname);
     var uid = user.uid;
+    //renderPage(user);
     // ...
   } else {
+    //renderLogin();
     // User is signed out
     // ...
   }
 });
+
+// login page stuff
+/* let renderLogin = ()=>{
+  $("body").html(`
+  <h1 id="title" class="title">Welcome to Yinzer!</h1>
+  <h2 id="subtitle" class="title"> The best place for Yinzers to say Tomlin should be fired, Devin bush is bad, and all around complaining about the Steelers</h2>
+  <!--<input id="newtitle" placeholder="Make your new title here">-->
+  <div class="d-flex justify-content-center mb-5 mt-5">
+  <button type="button" class="btn btn-primary" id="loginbutton"> Log into Yinzer! </button></div>
+  
+  <script src='https://www.gstatic.com/firebasejs/9.9.4/firebase-app-compat.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.1/js/bootstrap.min.js'></script>
+    <script src='https://www.gstatic.com/firebasejs/9.9.4/firebase-auth-compat.js'></script>
+    <script src='https://www.gstatic.com/firebasejs/9.9.4/firebase-database-compat.js'></script> 
+    <script src='script.js'></script>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"/>
+  `);
+
+  $("#loginbutton").on("click", ()=>{
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider);
+    });
+}
+
+//regular page stuff
+let renderPage = ()=>{
+  firebase.initializeApp(firebaseConfig);
+  $("body").html(`
+  <div class="container mb-5">
+        <div class="row">
+          <div class="col-6">
+            <input type="text" class="form-control" id="message" placeholder="Put message here!">
+          </div>
+          <div class="col-2">
+            <button type="button" class="btn btn-warning" id="sendtweet">send tweet</button>
+          </div>
+        </div>
+      </div>
+    
+    
+    
+    
+    
+    <div class="container text-center">
+        <div class="row">
+          <div class="col">
+            First in DOM, ordered last
+          </div>
+          <div class="col-6">
+            <div id="alltweets" class="allthetweets"></div>
+          </div>
+          <div class="col">
+            Third in DOM, ordered first
+          </div>
+        </div>
+      </div>
+    </body>
+
+    <button type="button" class="btn btn-primary" id="logoutbutton"> Log out </button>
+    
+    <script src='https://www.gstatic.com/firebasejs/9.9.4/firebase-app-compat.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.1/js/bootstrap.min.js'></script>
+    <script src='https://www.gstatic.com/firebasejs/9.9.4/firebase-auth-compat.js'></script>
+    <script src='https://www.gstatic.com/firebasejs/9.9.4/firebase-database-compat.js'></script> 
+    <script src='script.js'></script>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/css/bootstrap.min.css"/>`);
+
+    let renderTweet = (tObj)=>{
+      $("#alltweets").prepend(`
+      <div class="card mb-3 tweet" style="max-width: 540px;">
+      <div class="row g-0">
+        <div class="col-md-4 mt-5">
+          <img src="${tObj.author.pic}" class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5 class="card-title">${tObj.author.handle}</h5>
+            <p class="card-text">${tObj.content}</p>
+            <p class="card-text"><small class="text-muted">Tweeted at ${new Date(tObj.timestamp).toLocaleString()}</small></p>
+            <a href="#" class="btn btn-success">${tObj.likes} Likes</a>
+            <a href="#" class="btn btn-danger">TEMP Dislikes</a>
+            <a href="#" class="btn btn-dark">Delete Tweet</a>
+          </div>
+        </div>
+      </div>
+    </div>
+      `);
+      
+    }
+    
+    //tweet printing logic
+    let tweetref = firebase.database().ref("/tweets");
+    
+    tweetref.on("child_added", (ss)=>{     
+      let tObj = ss.val();
+      renderTweet(tObj);      
+      //$(".tweet").on("click", (evt)=>{
+      //alert("clicked");
+      //alert(JSON.stringify());          //this alert is coming up as undefined for some reason
+    //}
+                     //);
+    
+    //renderTweet(tweetJSON);
+    //renderTweet(tweetJSON);
+    
+    })
+    
+    //tweet sending logic
+    $("#sendtweet").on("click", ()=>{
+          var userinfo=firebase.auth().currentUser;
+          var tweetmessage = $("#message").val();
+          var tweetinfo = {
+            author: {
+              handle: userinfo.displayName,
+              pic: userinfo.photoURL
+            },
+            content: tweetmessage,
+            likes: 0,
+            retweets: 0,
+            timestamp: new Date().getTime()
+            
+          }
+         
+          let newtweetref =  tweetref.push();
+          newtweetref.set( tweetinfo);
+          
+          //what should I do with tweetinfo?
+          })
+
+  //logout logic goes here
+$("#logoutbutton").on("click", ()=>{
+  firebase.auth().signOut();
+})
+} */
 
 
 /*let tweetJSON = {
@@ -79,7 +219,7 @@ let renderTweet = (tObj)=>{
   $("#alltweets").prepend(`
   <div class="card mb-3 tweet" style="max-width: 540px;">
   <div class="row g-0">
-    <div class="col-md-4">
+    <div class="col-md-4 mt-5">
       <img src="${tObj.author.pic}" class="img-fluid rounded-start" alt="...">
     </div>
     <div class="col-md-8">
@@ -137,17 +277,17 @@ $("#sendtweet").on("click", ()=>{
       //what should I do with tweetinfo?
       })
 
-//login logic
+ //login logic
 
 $("#loginbutton").on("click", ()=>{
 var provider = new firebase.auth.GoogleAuthProvider();
 firebase.auth().signInWithPopup(provider);
-});
+}); 
 
 //logout logic goes here
 $("#logoutbutton").on("click", ()=>{
   firebase.auth().signOut();
-})
+}) 
 
 
 
