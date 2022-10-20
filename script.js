@@ -48,18 +48,27 @@ $("#nukes").on('click', ()=>{
 })
 
 //if signed in logic goes here
-firebase.auth().onAuthStateChanged((user) => {
+firebase.auth().onAuthStateChanged(user => {
   //alert("Does this fire even at page load?")
-  if (!!user) {
+  if (user) {
     // User is signed in, see docs for a list of available properties
     // https://firebase.google.com/docs/reference/js/firebase.User
     
-    console.log(user.displayname);
+    console.log(user);
     var uid = user.uid;
     console.log(user.uid);
+
+    $("#tweetcardsid").removeClass("d-none");
+    $("#tweetboxid").removeClass("d-none");
+    $("#loginbutton").addClass("d-none");
+    $("#logoutbutton").removeClass("d-none"); 
     //renderPage(user);
     // ...
   } else {
+    $("#loginbutton").removeClass("d-none");
+    $("#tweetcardsid").addClass("d-none");
+    $("#tweetboxid").addClass("d-none");
+    $("#logoutbutton").addClass("d-none"); 
     //renderLogin();
     // User is signed out
     // ...
@@ -286,21 +295,21 @@ $("#sendtweet").on("click", ()=>{
  //login logic
 
 $("#loginbutton").on("click", ()=>{         //when login button is clicked, make tweets, tweet box, and logout button visible
-$("#tweetcardsid").toggleClass("d-none");
-$("#tweetboxid").toggleClass("d-none");
-$("#loginbutton").addClass("d-none");
-$("#logoutbutton").removeClass("d-none");
+  $("#tweetcardsid").removeClass("d-none");
+  $("#tweetboxid").removeClass("d-none");
+  $("#loginbutton").addClass("d-none");
+  $("#logoutbutton").removeClass("d-none");
 var provider = new firebase.auth.GoogleAuthProvider();
-firebase.auth().signInWithPopup(provider);
+firebase.auth().signInWithRedirect(provider);
 
 }); 
 
 //logout logic goes here
 $("#logoutbutton").on("click", ()=>{
-$("#loginbutton").removeClass("d-none");
-$("#tweetcardsid").toggleClass("d-none");
-$("#tweetboxid").toggleClass("d-none");
-$("#logoutbutton").addClass("d-none");
+  $("#loginbutton").removeClass("d-none");
+  $("#tweetcardsid").addClass("d-none");
+  $("#tweetboxid").addClass("d-none");
+  $("#logoutbutton").addClass("d-none");
 
   firebase.auth().signOut();
 }) 
