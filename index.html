@@ -1,21 +1,22 @@
 <!-- partial:index.partial.html -->
 <!DOCTYPE html>
 <html lang="en">
-    <body>
-        <h1 id="title" class="title">Welcome to Yinzer!</h1>
-    <h2 id="subtitle" class="title"> The best place for Yinzers to say Tomlin should be fired, Devin bush is bad, and all around complaining about the Steelers</h2>
-    
+  <div class="navbar sticky-top text-center bg-light">
+    <body class="bg-light">
+        <h1 id="title" class="title w-100">Welcome to Yinzer!</h1>
+    <h2 id="subtitle" class="title w-100"> The best place for Yinzers to say Tomlin should be fired, Devin bush is bad, and all around complaining about the Steelers</h2>
+  </div>
     <!--<input id="newtitle" placeholder="Make your new title here">-->
     
     
-      <div class="d-flex justify-content-center mb-5 mt-5">
+      <div class="d-flex justify-content-center mt-5 d-block" id="loginbuttonid">
         <button type="button" class="btn btn-primary" id="loginbutton"> Log into Yinzer! </button>
       </div>
     
     
     <!-- attemting to do tweeting stuff here-->
 
-    <div class="container mb-5">
+    <div class="container mb-5 d-none" id="tweetboxid">
         <div class="row">
           <div class="col-6">
             <input type="text" class="form-control" id="message" placeholder="Put message here!">
@@ -30,7 +31,7 @@
     
     
     
-    <div class="container text-center">
+    <div class="container text-center d-none" id="tweetcardsid">
         <div class="row">
           <div class="col">
             First in DOM, ordered last
@@ -45,7 +46,7 @@
       </div>
     </body>
 
-    <button type="button" class="btn btn-primary" id="logoutbutton"> Log out </button>
+    <button type="button" class="btn btn-primary d-none" id="logoutbutton"> Log out </button>
     
     <script src='https://www.gstatic.com/firebasejs/9.9.4/firebase-app-compat.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js'></script>

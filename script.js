@@ -50,12 +50,13 @@ $("#nukes").on('click', ()=>{
 //if signed in logic goes here
 firebase.auth().onAuthStateChanged((user) => {
   //alert("Does this fire even at page load?")
-  if (user) {
+  if (!!user) {
     // User is signed in, see docs for a list of available properties
     // https://firebase.google.com/docs/reference/js/firebase.User
     
     console.log(user.displayname);
     var uid = user.uid;
+    console.log(user.uid);
     //renderPage(user);
     // ...
   } else {
@@ -257,6 +258,7 @@ tweetref.on("child_added", (ss)=>{
 
 //tweet sending logic
 $("#sendtweet").on("click", ()=>{
+
       var userinfo=firebase.auth().currentUser;
       var tweetmessage = $("#message").val();
       var tweetinfo = {
@@ -275,17 +277,31 @@ $("#sendtweet").on("click", ()=>{
       newtweetref.set( tweetinfo);
       
       //what should I do with tweetinfo?
+      const messageInput = document.getElementById('message');
+      messageInput.value='';
+      
+      // trying to clear the input above this
       })
 
  //login logic
 
-$("#loginbutton").on("click", ()=>{
+$("#loginbutton").on("click", ()=>{         //when login button is clicked, make tweets, tweet box, and logout button visible
+$("#tweetcardsid").toggleClass("d-none");
+$("#tweetboxid").toggleClass("d-none");
+$("#loginbutton").addClass("d-none");
+$("#logoutbutton").removeClass("d-none");
 var provider = new firebase.auth.GoogleAuthProvider();
 firebase.auth().signInWithPopup(provider);
+
 }); 
 
 //logout logic goes here
 $("#logoutbutton").on("click", ()=>{
+$("#loginbutton").removeClass("d-none");
+$("#tweetcardsid").toggleClass("d-none");
+$("#tweetboxid").toggleClass("d-none");
+$("#logoutbutton").addClass("d-none");
+
   firebase.auth().signOut();
 }) 
 
