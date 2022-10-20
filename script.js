@@ -225,7 +225,7 @@ $("#logoutbutton").on("click", ()=>{
   }
 };*/
 
-let renderTweet = (tObj)=>{
+let renderTweet = (tObj,uuid)=>{
   $("#alltweets").prepend(`
   <div class="card mb-3 tweet" style="max-width: 540px;">
   <div class="row g-0">
@@ -237,8 +237,8 @@ let renderTweet = (tObj)=>{
         <h5 class="card-title">${tObj.author.handle}</h5>
         <p class="card-text">${tObj.content}</p>
         <p class="card-text"><small class="text-muted">Tweeted at ${new Date(tObj.timestamp).toLocaleString()}</small></p>
-        <a href="#" class="btn btn-success">${tObj.likes} Likes</a>
-        <a href="#" class="btn btn-danger">TEMP Dislikes</a>
+        <a href="#" class="btn btn-success likebutton" data-tweetid="${uuid}">${tObj.likes} Likes</a>
+        <a href="#" class="btn btn-danger dislikebutton">TEMP Dislikes</a>
         <a href="#" class="btn btn-dark">Delete Tweet</a>
       </div>
     </div>
@@ -253,7 +253,15 @@ let tweetref = firebase.database().ref("/tweets");
 
 tweetref.on("child_added", (ss)=>{     
   let tObj = ss.val();
-  renderTweet(tObj);      
+  let uuid = ss.key;
+  renderTweet(tObj,uuid);
+  $(".likebutton").off("click");
+  $(".likebutton").on("click", (evt)=>{
+  let clickedTweet = $(evt.currentTarget).attr("data-tweetid");
+  alert(clickedTweet);
+  //let likeCount = rendered 
+
+});      
   //$(".tweet").on("click", (evt)=>{
   //alert("clicked");
   //alert(JSON.stringify());          //this alert is coming up as undefined for some reason
@@ -264,6 +272,9 @@ tweetref.on("child_added", (ss)=>{
 //renderTweet(tweetJSON);
 
 })
+
+
+
 
 //tweet sending logic
 $("#sendtweet").on("click", ()=>{
