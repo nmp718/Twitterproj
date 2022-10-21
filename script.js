@@ -12,6 +12,26 @@
 firebase.initializeApp(firebaseConfig);
 let titleRef = firebase.database().ref("/title");
 
+let toggleLike=(tweetRef, uid)=> {
+  console.log(uid);
+  tweetRef.transaction((tObj) => {
+    if (tObj) {
+      if (tObj.likes && tObj.likes[uid]) {
+        tObj.likes--;
+        tObj.likes[uid] = null;
+      } else {
+        tObj.likes++;
+        if (!tObj.likes) {
+          tObj.likes = {};
+        }
+        tObj.likes[uid] = true;
+      }
+    }
+    return tObj;
+  });
+}
+
+
 // there is an alternative to set called update, 
 
 let rosterRef = firebase.database().ref("/roster");
@@ -245,11 +265,20 @@ let renderTweet = (tObj,uuid)=>{
   </div>
 </div>
   `);
+  renderedTweetLikeLookup[uuid] = tObj.likes;
+  firebase.database().ref("/tweets").child(uuid).child("likes").on("value", ss=>{
+    renderedTweetLikeLookup[uuid]= ss.val();
+    $(`.likebutton[data-tweetid=${uuid}]`).html(`${renderedTweetLikeLookup[uuid]} Likes`);
+    console.log(renderedTweetLikeLookup[uuid]);
+  })
   
 }
 
 //tweet printing logic
 let tweetref = firebase.database().ref("/tweets");
+
+//logic for like addition
+let renderedTweetLikeLookup = {};
 
 tweetref.on("child_added", (ss)=>{     
   let tObj = ss.val();
@@ -259,7 +288,10 @@ tweetref.on("child_added", (ss)=>{
   $(".likebutton").on("click", (evt)=>{
   let clickedTweet = $(evt.currentTarget).attr("data-tweetid");
   alert(clickedTweet);
-  //let likeCount = rendered 
+  let likeCount = renderedTweetLikeLookup[clickedTweet];
+  //console.log(likeCount);
+  let tweetRef = firebase.database().ref("/tweets").child(clickedTweet);
+  toggleLike(tweetRef, uuid);
 
 });      
   //$(".tweet").on("click", (evt)=>{
