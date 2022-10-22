@@ -280,9 +280,10 @@ let tweetref = firebase.database().ref("/tweets");
 //logic for like addition
 let renderedTweetLikeLookup = {};
 
-tweetref.on("child_added", (ss)=>{     
+tweetref.on("child_added", (ss)=>{    
+  const user = firebase.auth().currentUser; 
   let tObj = ss.val();
-  let uuid = ss.key;
+  let uuid = ss.key;            //this is the tweet id
   renderTweet(tObj,uuid);
   $(".likebutton").off("click");
   $(".likebutton").on("click", (evt)=>{
@@ -291,7 +292,7 @@ tweetref.on("child_added", (ss)=>{
   let likeCount = renderedTweetLikeLookup[clickedTweet];
   //console.log(likeCount);
   let tweetRef = firebase.database().ref("/tweets").child(clickedTweet);
-  toggleLike(tweetRef, uuid);
+  toggleLike(tweetRef, user.uid);
 
 });      
   //$(".tweet").on("click", (evt)=>{
