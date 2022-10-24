@@ -12,19 +12,38 @@
 firebase.initializeApp(firebaseConfig);
 let titleRef = firebase.database().ref("/title");
 
-let toggleLike=(tweetRef, uid)=> {
-  console.log(uid);
+let toggleLike = (tweetRef, uid)=> {
   tweetRef.transaction((tObj) => {
+    console.log(tObj);
     if (tObj) {
-      if (tObj.likes && tObj.likes[uid]) {
+      if(tObj.likes && tObj.liked_by_user && tObj.liked_by_user.hasOwnProperty(uid)){
         tObj.likes--;
-        tObj.likes[uid] = null;
+        tObj.liked_by_user[uid] = null;
       } else {
         tObj.likes++;
-        if (!tObj.likes) {
-          tObj.likes = {};
+        if (!tObj.liked_by_user) {
+          tObj.liked_by_user = {};
         }
-        tObj.likes[uid] = true;
+        tObj.liked_by_user[uid] = true;
+      }
+    }
+    return tObj;
+  });
+}
+
+let toggleDislike = (tweetRef, uid)=> {
+  tweetRef.transaction((tObj) => {
+    console.log(tObj);
+    if (tObj) {
+      if (tObj.dislikes && tObj.disliked_by_user && tObj.disliked_by_user.hasOwnProperty(uid)) {
+        tObj.dislikes--;
+        tObj.disliked_by_user[uid] = null;
+      } else {
+        tObj.dislikes++;
+        if (!tObj.disliked_by_user) {
+          tObj.disliked_by_user = {};
+        }
+        tObj.disliked_by_user[uid] = true;
       }
     }
     return tObj;
@@ -258,8 +277,8 @@ let renderTweet = (tObj,uuid)=>{
         <p class="card-text">${tObj.content}</p>
         <p class="card-text"><small class="text-muted">Tweeted at ${new Date(tObj.timestamp).toLocaleString()}</small></p>
         <a href="#" class="btn btn-success likebutton" data-tweetid="${uuid}">${tObj.likes} Likes</a>
-        <a href="#" class="btn btn-danger dislikebutton">TEMP Dislikes</a>
-        <a href="#" class="btn btn-dark">Delete Tweet</a>
+        <a href="#" class="btn btn-danger dislikebutton"data-tweetid="${uuid}">${tObj.dislikes} Dislikes</a>
+        <a href="#" class="btn btn-dark deletebutton">Delete Tweet</a>
       </div>
     </div>
   </div>
@@ -271,6 +290,13 @@ let renderTweet = (tObj,uuid)=>{
     $(`.likebutton[data-tweetid=${uuid}]`).html(`${renderedTweetLikeLookup[uuid]} Likes`);
     console.log(renderedTweetLikeLookup[uuid]);
   })
+
+  renderedTweetDislikeLookup[uuid] = tObj.dislikes;
+  firebase.database().ref("/tweets").child(uuid).child("dislikes").on("value", ss=>{
+    renderedTweetDislikeLookup[uuid]= ss.val();
+    $(`.dislikebutton[data-tweetid=${uuid}]`).html(`${renderedTweetDislikeLookup[uuid]} Dislikes`);
+    console.log(renderedTweetDislikeLookup[uuid]);
+  })
   
 }
 
@@ -279,6 +305,7 @@ let tweetref = firebase.database().ref("/tweets");
 
 //logic for like addition
 let renderedTweetLikeLookup = {};
+let renderedTweetDislikeLookup = {};
 
 tweetref.on("child_added", (ss)=>{    
   const user = firebase.auth().currentUser; 
@@ -288,13 +315,31 @@ tweetref.on("child_added", (ss)=>{
   $(".likebutton").off("click");
   $(".likebutton").on("click", (evt)=>{
   let clickedTweet = $(evt.currentTarget).attr("data-tweetid");
-  alert(clickedTweet);
+  //alert(clickedTweet);
   let likeCount = renderedTweetLikeLookup[clickedTweet];
   //console.log(likeCount);
   let tweetRef = firebase.database().ref("/tweets").child(clickedTweet);
   toggleLike(tweetRef, user.uid);
 
-});      
+  });
+  $(".deletebutton").off("click");
+  $(".deletebutton").on("click", (evt)=>{
+    let clickedTweet = $(evt.currentTarget).attr("data-tweetid");
+    let tweetRef = firebase.database().ref("/tweets").child(clickedTweet);
+    rtdb.remove(tweetRef);
+
+  }); 
+  $(".dislikebutton").off("click");
+  $(".dislikebutton").on("click", (evt)=>{
+  let clickedTweet = $(evt.currentTarget).attr("data-tweetid");
+  //alert(clickedTweet);
+  let likeCount = renderedTweetLikeLookup[clickedTweet];
+  //console.log(likeCount);
+  let tweetRef = firebase.database().ref("/tweets").child(clickedTweet);
+  toggleDislike(tweetRef, user.uid);
+
+  });
+  
   //$(".tweet").on("click", (evt)=>{
   //alert("clicked");
   //alert(JSON.stringify());          //this alert is coming up as undefined for some reason
@@ -321,7 +366,7 @@ $("#sendtweet").on("click", ()=>{
         },
         content: tweetmessage,
         likes: 0,
-        retweets: 0,
+        dislikes: 0,
         timestamp: new Date().getTime()
         
       }
